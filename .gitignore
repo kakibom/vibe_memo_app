@@ -1,0 +1,35 @@
+# Build outputs
+dist/
+out/
+build/
+release/
+
+# Node modules
+node_modules/
+
+# Executables
+*.exe
+*.msi
+*.dmg
+*.app
+*.asar
+
+# Environment files
+.env
+.env.local
+
+# Cache
+.cache/
+temp/
+tmp/
+
+# Logs
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/

@@ -1,0 +1,328 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body,
+html {
+  height: 100%;
+  overflow: hidden;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* 공통 패널 스타일 */
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* 1. 마크다운 에디터 */
+.toolbar-extra {
+  padding: 10px;
+  background: #f4f4f4;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+#editor {
+  height: calc(100% - 50px);
+}
+.toastui-editor-contents {
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+.toastui-editor-defaultUI {
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* 2. To-Do List (중앙) */
+.todo-panel {
+  background: #f9f9f9;
+  padding: 15px;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+.todo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+.todo-header h3 {
+  font-size: 1.1em;
+  margin: 0;
+}
+.toggle-completed-label {
+  font-size: 0.8em;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.todo-input-area {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 15px;
+  flex-shrink: 0;
+}
+.todo-input-area input {
+  flex: 1;
+  padding: 5px;
+}
+
+.todo-columns-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.todo-block {
+  /* flex: 1;  <-- 이 부분을 제거하거나 min-height를 줄여야 접었을 때 자연스럽습니다 */
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 5px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  min-height: fit-content; /* 내용물 크기에 맞춤 */
+}
+
+/* 헤더와 토글 버튼이 있는 영역 */
+.block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f0f0f0;
+  padding: 5px 8px;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+.todo-block h4 {
+  margin: 0;
+  font-size: 0.85em;
+  color: #555;
+}
+
+/* 토글 버튼 */
+.toggle-list-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8em;
+  color: #777;
+  transition: transform 0.2s;
+}
+/* 접혔을 때 화살표 회전 */
+.toggle-list-btn.collapsed {
+  transform: rotate(-90deg);
+}
+
+.todo-list {
+  list-style: none;
+  min-height: 20px;
+  flex: 1;
+  padding: 0 5px;
+  transition: all 0.3s ease;
+}
+/* 리스트 숨김 클래스 */
+.todo-list.collapsed {
+  display: none;
+}
+
+.todo-list li {
+  padding: 6px 8px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  cursor: move;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-size: 13px;
+}
+.todo-text {
+  flex: 1;
+  cursor: text;
+}
+.edit-input {
+  width: 100%;
+  font-size: 13px;
+  padding: 2px;
+}
+.hidden {
+  display: none !important;
+}
+
+/* 삭제 버튼 스타일 */
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #ff6b6b; /* 연한 빨강 */
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 5px;
+  margin-left: auto; /* 오른쪽 끝으로 밀기 */
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.delete-btn:hover {
+  opacity: 1;
+  color: #ff0000;
+}
+
+/* 3. AI 패널 (오른쪽) */
+.ai-panel {
+  background: #fff;
+}
+.tabs-header {
+  display: flex;
+  background: #eee;
+  border-bottom: 1px solid #ccc;
+  height: 35px;
+  flex-shrink: 0;
+}
+.tab-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: bold;
+  color: #666;
+  border-right: 1px solid #ddd;
+  transition: background 0.2s;
+}
+.tab-btn:hover {
+  background: #e0e0e0;
+}
+.tab-btn.active {
+  background: #fff;
+  color: #007acc;
+  border-bottom: 2px solid #007acc;
+}
+.tab-content {
+  flex: 1;
+  display: none;
+  height: 100%;
+}
+.tab-content.active {
+  display: block;
+}
+webview {
+  width: 100%;
+  height: 100%;
+}
+
+/* 드래그 핸들 (Split.js) */
+.gutter {
+  background-color: #eee;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transition: background-color 0.2s;
+}
+.gutter:hover {
+  background-color: #007acc;
+}
+.gutter.gutter-horizontal {
+  cursor: col-resize;
+  width: 6px;
+}
+
+/* --- Toast UI Editor 툴바 콤팩트 모드 (Scale 방식) --- */
+.toastui-editor-defaultUI-toolbar {
+  height: 42px !important;
+  padding: 0 5px !important;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.toastui-editor-toolbar-group {
+  transform: scale(0.85);
+  transform-origin: center;
+  margin: 0 -3px !important;
+}
+.toastui-editor-toolbar-divider {
+  margin: 12px 2px !important;
+  height: 16px !important;
+}
+.toastui-editor-popup {
+  margin-top: -5px !important;
+}
+.toastui-editor-tooltip {
+  margin-top: -5px !important;
+}
+
+/* ... 기존 코드들은 그대로 두시고, 맨 아래에 추가하세요 ... */
+
+/* 🔥 검색창 스타일 */
+.search-container {
+  position: absolute;
+  top: 50px; /* 툴바 바로 아래 */
+  right: 20px;
+  z-index: 1000;
+  background: #fff;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.search-container.hidden {
+  display: none;
+}
+
+#search-input {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  outline: none;
+  font-size: 13px;
+  width: 150px;
+}
+
+#search-input:focus {
+  border-color: #007acc;
+}
+
+.search-container button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px 5px;
+  font-size: 12px;
+  color: #555;
+  border-radius: 2px;
+}
+
+.search-container button:hover {
+  background-color: #eee;
+  color: #000;
+}
+
+#search-count {
+  font-size: 11px;
+  color: #888;
+  margin-left: 5px;
+  min-width: 40px;
+  text-align: right;
+}

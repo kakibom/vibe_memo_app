@@ -1,0 +1,19 @@
+{
+  "name": "my-productivity-app",
+  "version": "1.0.0",
+  "description": "Markdown Memo + Todo + ChatGPT App",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.0.0"
+  },
+  "dependencies": {
+    "@toast-ui/editor": "^3.2.2",
+    "sortablejs": "^1.15.6",
+    "split.js": "^1.6.5"
+  }
+}
