@@ -16,8 +16,48 @@ const editor = new Editor({
   el: document.querySelector("#editor"),
   height: "100%",
   initialEditType: "wysiwyg",
-  previewStyle: "vertical",
+  previewStyle: "tab",
 });
+
+// 🔥 WYSIWYG 복사 시 줄바꿈 문제 해결
+setTimeout(() => {
+    const wwContainer = document.querySelector('.toastui-editor-ww-container .ProseMirror');
+    if (wwContainer) {
+        wwContainer.addEventListener('copy', (event) => {
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+
+            event.preventDefault();
+            
+            const range = selection.getRangeAt(0);
+            const container = document.createElement("div");
+            // 화면 밖으로 빼서 보이지 않게 처리
+            container.style.position = "fixed";
+            container.style.left = "-9999px";
+            container.appendChild(range.cloneContents());
+            
+            document.body.appendChild(container);
+
+            event.clipboardData.setData('text/html', container.innerHTML);
+            
+            let plainText = container.innerText;
+            
+            // Cleanup
+            document.body.removeChild(container);
+
+            // 윈도우/Chrome에서 <p> 태그 사이에는 보통 2개의 개행(\n\n)이 들어갑니다.
+            // 텍스트 에디터처럼 줄바꿈 1번 당 \n 1개로 처리하기 위해 연속된 개행을 줄입니다.
+            // 단, 사용자가 의도적으로 비운 줄(빈 p태그 등)은 보존되어야 하므로
+            // 무조건적인 치환보다는 3개 이상의 개행을 2개로, 2개는 1개로 줄이는 전략이 안전할 수 있으나
+            // 사용자 요청 "줄바꿈이 없어진다"는 detached element 문제일 가능성이 높으므로
+            // 일단 기본적인 \n\n -> \n 변환만 유지하되, DOM 부착으로 해결되는지 봅니다.
+            plainText = plainText.replace(/\n\n/g, '\n'); 
+            
+            event.clipboardData.setData('text/plain', plainText);
+        });
+    }
+}, 1000); // 에디터 로딩 대기
+
 
 editor.on("change", () => {
   localStorage.setItem("autoSaveContent", editor.getMarkdown());
@@ -35,6 +75,16 @@ document.getElementById("btn-save").addEventListener("click", async () => {
   const content = editor.getMarkdown();
   await ipcRenderer.invoke("save-file", content);
 });
+
+document.getElementById("btn-new").addEventListener("click", () => {
+  editor.setMarkdown("");
+  const status = document.getElementById("status-msg");
+  if (status) {
+      status.innerText = "새 파일";
+      setTimeout(() => (status.innerText = ""), 1000);
+  }
+});
+
 
 document.getElementById("btn-load").addEventListener("click", async () => {
   const result = await ipcRenderer.invoke("open-file");
@@ -324,4 +374,13 @@ window.addEventListener("keydown", (e) => {
       closeSearch();
     }
   }
+});
+
+// --- 6. AI 패널 화면 배율 설정 (90%) ---
+const webviews = document.querySelectorAll("webview");
+webviews.forEach((webview) => {
+  // 웹뷰가 로드될 때마다 실행
+  webview.addEventListener("dom-ready", () => {
+    webview.setZoomFactor(0.9); // 1.0이 100%, 0.9가 90%입니다.
+  });
 });

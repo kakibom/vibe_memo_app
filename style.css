@@ -78,9 +78,11 @@ html {
   margin-bottom: 15px;
   flex-shrink: 0;
 }
-.todo-input-area input {
+.todo-input-area textarea {
   flex: 1;
   padding: 5px;
+  resize: none;
+  height: 60px;
 }
 
 .todo-columns-vertical {
@@ -326,3 +328,5 @@ webview {
   min-width: 40px;
   text-align: right;
 }
+
+
